@@ -1,0 +1,104 @@
+name: Death Rush - ZIP cumulativo para GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.zip'
+      - 'uploads/*.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: death-rush-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extrair ZIP e remover o ZIP após sucesso
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path, PurePosixPath
+          from zipfile import ZipFile
+          import stat
+
+          root = Path.cwd()
+          archives = sorted(root.glob('*.zip')) + sorted((root / 'uploads').glob('*.zip')) if (root / 'uploads').exists() else sorted(root.glob('*.zip'))
+          archives = sorted(archives, key=lambda a: a.stat().st_mtime)
+          for archive in archives:
+              if archive.stat().st_size > 25 * 1024 * 1024:
+                  raise RuntimeError(f'ZIP acima do limite de 25 MB: {archive.name}')
+              with ZipFile(archive) as package:
+                  files = [entry for entry in package.infolist() if not entry.is_dir()]
+                  if sum(x.file_size for x in files) > 90 * 1024 * 1024:
+                      raise RuntimeError('ZIP descompactado acima do limite de segurança de 90 MB')
+                  parts = [PurePosixPath(x.filename).parts for x in files]
+                  # Compatibilidade com ZIPs que incluem uma única pasta externa.
+                  common_folder = bool(parts and all(len(p) > 1 and p[0] == parts[0][0] for p in parts))
+                  for entry in files:
+                      path = PurePosixPath(entry.filename)
+                      if path.is_absolute() or '..' in path.parts or '\\' in entry.filename:
+                          raise RuntimeError(f'Caminho inseguro no ZIP: {entry.filename}')
+                      mode = entry.external_attr >> 16
+                      if stat.S_ISLNK(mode):
+                          raise RuntimeError(f'Link simbólico não permitido: {entry.filename}')
+                      target_parts = path.parts[1:] if common_folder else path.parts
+                      if not target_parts:
+                          continue
+                      if target_parts[0] in ('.github', '.git', 'uploads') or target_parts[-1].lower().endswith('.zip'):
+                          continue
+                      if target_parts[-1].startswith('preview-') or target_parts[-1].startswith('.DS_Store'):
+                          continue
+                      dest = root.joinpath(*target_parts)
+                      dest.parent.mkdir(parents=True, exist_ok=True)
+                      dest.write_bytes(package.read(entry))
+              archive.unlink()  # só remove quando toda a extração for concluída
+              print(f'Extraído e removido: {archive.name}')
+          if not (root / 'index.html').is_file():
+              raise RuntimeError('index.html ausente na raiz — site não será publicado')
+          PY
+
+      - name: Salvar arquivos extraídos no GitHub
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m 'Deploy: extrair ZIP cumulativo do Death Rush [skip ci]'
+            git push
+          fi
+
+      - name: Configurar publicação do GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar somente arquivos públicos do jogo
+        shell: bash
+        run: |
+          mkdir -p public
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='public/' --exclude='uploads/' --exclude='*.zip' --exclude='README.md' --exclude='preview-*' ./ public/
+          test -s public/index.html
+
+      - name: Enviar site estático
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+
+      - name: Publicar jogo no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
