@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#100c14" />
+  <meta name="description" content="Death Rush: Infernal Ascension — sobreviva às hordas do abismo num roguelite de fantasia sombria." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Death Rush — Infernal Ascension</title>
+</head>
+<body>
+  <main id="app">
+    <canvas id="battle" aria-label="Campo de batalha de Death Rush"></canvas>
+    <div id="ambientShade" aria-hidden="true"></div>
+    <div id="hud" class="hud hidden" aria-live="off">
+      <div class="hud-top">
+        <div class="hud-vitals">
+          <div class="vital-head"><span class="gem-mark">◆</span><strong id="hpText">100 / 100</strong><small id="playerLevel">NÍVEL 1</small></div>
+          <div class="meter health"><div id="hpFill" class="meter-fill"></div></div>
+          <div class="meter xp"><div id="xpFill" class="meter-fill"></div></div>
+        </div>
+        <div class="hud-stats"><div><small>TEMPO</small><strong id="timeText">05:00</strong></div><div><small>ABATES</small><strong id="killsText">0</strong></div></div>
+        <button id="pauseBtn" class="hud-pause" aria-label="Pausar jogo">Ⅱ</button>
+      </div>
+      <div id="bossHud" class="boss-hud hidden"><div class="boss-name">MALGOR <span>O DEVORADOR</span></div><div class="meter boss-meter"><div id="bossFill" class="meter-fill"></div></div></div>
+      <div class="hud-bottom"><div class="hud-skillbox"><strong id="classHud">CARNIFICINA</strong><span id="skillsHud">Lâminas I</span></div><div class="frenzy"><div class="frenzy-title"><span>FRENESI</span><b id="frenzyLevel">0 / 4</b></div><div class="meter frenzy-meter"><div id="frenzyFill" class="meter-fill"></div></div></div></div>
+      <div id="phaseText" class="phase-text"></div>
+    </div>
+    <div id="touchUI" class="touch-ui hidden">
+      <div id="joystick" class="joystick"><div id="stick" class="joystick-knob"></div></div>
+      <button id="dashBtn" class="dash-btn" aria-label="Esquiva rápida"><span>↯</span><small>ESQUIVA</small></button>
+    </div>
+    <div id="toast" class="toast hidden" role="status"></div>
+    <section id="overlay" class="overlay"></section>
+    <div class="version">V1.0 • HTML5 OFFLINE</div>
+  </main>
+  <script src="game.js" defer></script>
+</body>
+</html>
