@@ -1,68 +1,40 @@
-# DEATH RUSH — INFERNAL ASCENSION V1.0
+# DEATH RUSH — INFERNAL ASCENSION V1.1 CUMULATIVA
 
-Protótipo **cumulativo e jogável**, totalmente em **HTML, CSS e JavaScript puro**, sem dependências, sem API externa e sem servidor de jogo.
+Jogo em HTML, CSS e JS puro, offline/PWA, sem dependências externas. Esta versão inclui integralmente a V1.0 mais novas mecânicas de combate, caixas e efeitos especiais. **Não foram substituídos os gráficos/sprites.**
 
-## Jogar agora
+## Conteúdo da V1.1
 
-1. Extraia o ZIP.
-2. Abra `index.html` no Chrome, Edge, Firefox ou navegador Android moderno.
-3. Escolha seu pacto e clique em **INICIAR CAÇADA**.
+- **Sentinelas Orbitais (níveis I–V):** exatamente 1, 2, 3, 4 ou 5 drones que ficam orbitando o jogador. Causam dano por contato. **Sede de Sangue** aumenta a velocidade da rotação em 20% por nível e aumenta o dano dos drones em 10% por nível, além de acelerar ataques básicos.
+- **Julgamento Trovejante (níveis I–V):** raios automáticos atingem alvos aleatórios próximos. Mais níveis = mais raios, dano maior e recarga menor. No nível V ocorrem sete raios por ativação, se houver alvos suficientes.
+- **Baús no mapa:** cinco baús iniciais perto da origem, novos baús periodicamente e chance de baú em elites. Ao chegar perto, o especial ativa automaticamente, sem pausar a batalha.
+- **4 especiais:** Ímã Abissal (puxa cristais de XP próximos em grande raio); Bomba do Juízo (mata todos os inimigos comuns e elites numa área, tira 20% da vida máxima de Malgor sem finalizar a luta); Sangue Vital (cura até o máximo); Eclipse Temporal (congela monstros, tiros e ataques inimigos por 7 segundos; o herói continua lutando).
+- **Chefão:** deixa baú ao entrar na segunda fase; derrotá-lo rende espólio extra de 50 almas além de relíquia e vitória.
+- **Combate mais ágil:** movimentação inicial +17%, cadência base ampliada, mais inimigos desde os primeiros segundos e frequência de hordas maior.
+- **HUD:** mostra os níveis de drones e raios e informa o último especial coletado ou duração do Eclipse.
+- **Compatibilidade com o save V1:** armazenamento original preservado, sem migração destrutiva.
+- **PWA:** cache atualizado para a V1.1 e arquivos de código priorizados pela rede quando online.
 
-**Importante:** o jogo por arquivo local (`file://`) funciona, mas a instalação como PWA e o service worker exigem uma origem HTTP segura (`https://` ou `http://localhost`). Para servir localmente, rode no diretório do jogo:
+## Como jogar
 
-```bash
-python -m http.server 8080
-```
+Abra `index.html` em um navegador. No celular, use joystick virtual + botão de esquiva. No computador, use WASD ou setas e espaço. Ataques são automáticos. XP oferece três escolhas de nível. Malgor chega no final da caçada. Modos de 5 minutos e 90 segundos disponíveis.
 
-Abra `http://localhost:8080`. Para Android e instalação, publique os arquivos em **GitHub Pages** (HTTPS) ou outro host estático. Use o menu do navegador → *Adicionar à tela inicial* / *Instalar app*. O progresso fica salvo somente no navegador e dispositivo em uso; não há sincronização entre aparelhos.
+## GitHub: subir só o ZIP, extrair e excluir automaticamente
 
-## Controles
+O arquivo `.github/workflows/deploy-from-zip.yml` está incluso no projeto. **GitHub não executa um workflow que ainda está dentro do ZIP.** Configure o workflow **uma única vez**, antes de enviar seu primeiro ZIP:
 
-| Comando | Celular | Teclado |
-|---|---|---|
-| Movimentação | Joystick inferior esquerdo | WASD ou setas |
-| Atacar | Automático | Automático |
-| Esquiva | Botão ↯ inferior direito | Espaço |
-| Pausar | Botão Ⅱ | P ou Esc |
-| Escolher upgrade | Toque no cartão | 1, 2 ou 3 |
+1. Crie um repositório público no GitHub, por exemplo `death-rush`, com branch `main`.
+2. No repositório, clique em **Add file → Create new file**. No nome do arquivo digite **`.github/workflows/deploy-from-zip.yml`**, cole o conteúdo do arquivo `WORKFLOW_GITHUB_DEATH_RUSH.yml` fornecido separadamente e salve com **Commit changes**. (Você também pode enviar o arquivo dentro da pasta `.github/workflows` de uma cópia extraída.)
+3. Em **Settings → Pages → Build and deployment → Source**, escolha **GitHub Actions** (não `Deploy from a branch`).
+4. No repositório, use **Add file → Upload files** para enviar **`DEATH_RUSH_V1_1_CUMULATIVA.zip`** na raiz, **sem descompactar**. Faça o commit na branch `main`.
+5. Abra a aba **Actions** e acompanhe `Death Rush - ZIP cumulativo para GitHub Pages`.
+6. O workflow extrai os arquivos para a raiz, exclui o ZIP, grava as alterações com commit e publica o jogo pelo GitHub Pages. Depois abra `https://SEU-USUARIO.github.io/death-rush/` (troque o usuário e nome do repositório).
 
-## Conteúdo incluído
+**Próximas atualizações:** publique sempre um único ZIP cumulativo na raiz do repositório. Não é preciso abrir ou extrair no Android. O GitHub só executará o workflow após o seu envio/commit. É normal o commit do bot não disparar uma segunda execução; o próprio workflow já faz o deploy do site.
 
-- 3 pactos iniciais: **Carnificina**, **Necromancia**, **Ascensão Infernal**.
-- Arena procedural com ruínas, runas e solo vulcânico.
-- 4 tipos de demônios: **imps**, **cães do abismo**, **cultistas**, **brutos**; versões elite com mais vida.
-- Ataque automático, projéteis, efeitos de colisão e botão de esquiva.
-- 10 tipos de melhorias com até 5 níveis; 3 armas evolutivas (lâminas, círculos de fogo e espectros).
-- Coleta de XP, níveis, upgrades aleatórios e poder permanente.
-- Frenesi em quatro estágios e transformação demoníaca temporária.
-- Malgor, chefão com barras de HP, duas fases, projéteis radiais e ataques telegrafados.
-- Modo padrão de **5 minutos** com Malgor aparecendo a partir de ~3min58s; modo rápido de **90 segundos** com chefão a partir de 56s.
-- **Relicário com 6 itens equipáveis**: armas, armaduras e amuletos, obtidos de elites e chefão; efeitos aplicados nas partidas seguintes.
-- Pontuação, almas por abates, moeda adicional por vitória, recordes e **Altar de Poder**.
-- Save com `localStorage`, som procedural Web Audio e ajuste gráfico Alto/Baixo/Automático.
-- Canvas responsivo, processamento de inimigos limitado, PWA básico e cache offline.
+**Segurança:** não extrai links simbólicos, caminhos que escapem do repositório ou arquivos dentro de `.github` e `.git`. Limites de 25 MB no ZIP e 90 MB descompactado. Não apaga arquivos do jogo antigos que deixaram de estar no ZIP; nesse caso é necessário limpar explicitamente em uma atualização.
 
-## Organização
+## Observações
 
-```text
-index.html             Interface, HUD e menus
-style.css              Layout e responsividade
- game.js               Motor de jogo, física, combate, progressão, desenhos proceduralmente renderizados
-manifest.webmanifest   Instalação PWA
-service-worker.js      Cache offline
-assets/icon-*.png      Ícones do aplicativo
-```
-
-## Observações e limites honestos da V1
-
-- Arte é **procedural/vetorial desenhada no Canvas**, sem sprites externos. Não inclui spritesheets animadas produzidas por artista.
-- Saves podem desaparecer ao limpar dados do site. Não há conta, nuvem, multiplayer, backend ou loja real.
-- Balanceamento e FPS são **objetivos a validar em aparelhos reais**; não há garantia de 30 FPS em todo Android.
-- O limite de inimigos é adaptado à largura/tipo de ponteiro para reduzir uso de CPU; isso não é um benchmark.
-- O modo de 90 segundos é para desenvolvimento e demonstração; as almas são concedidas nos dois modos.
-
-## Próximas melhorias naturais
-
-Criar sprites com atlas e animações reais; outras arenas e chefões; inventário visual com itens equipáveis; novos inimigos e chefões; balanceamento com telemetria local; conquistas e missões; desafios diários; persistência em nuvem opcional.
-
-© Projeto original de protótipo. Sem bibliotecas ou assets de terceiros.
+- O jogo roda totalmente no navegador. Instalar como PWA precisa de HTTPS/localhost e do suporte do navegador.
+- Saves são locais a cada dispositivo/navegador, não são sincronizados na nuvem.
+- Ajuste de FPS e desempenho final devem ser validados em celulares reais.

@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/icon-192.png" />
   <link rel="apple-touch-icon" href="assets/icon-192.png" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=1.1" />
   <title>Death Rush — Infernal Ascension</title>
 </head>
 <body>
@@ -27,7 +27,7 @@
       </div>
       <div id="bossHud" class="boss-hud hidden"><div class="boss-name">MALGOR <span>O DEVORADOR</span></div><div class="meter boss-meter"><div id="bossFill" class="meter-fill"></div></div></div>
       <div class="hud-bottom"><div class="hud-skillbox"><strong id="classHud">CARNIFICINA</strong><span id="skillsHud">Lâminas I</span></div><div class="frenzy"><div class="frenzy-title"><span>FRENESI</span><b id="frenzyLevel">0 / 4</b></div><div class="meter frenzy-meter"><div id="frenzyFill" class="meter-fill"></div></div></div></div>
-      <div id="phaseText" class="phase-text"></div>
+      <div id="phaseText" class="phase-text"></div><div id="specialHud" class="special-hud" aria-live="polite">◆ PROCURE BAÚS ESPECIAIS</div>
     </div>
     <div id="touchUI" class="touch-ui hidden">
       <div id="joystick" class="joystick"><div id="stick" class="joystick-knob"></div></div>
@@ -35,8 +35,8 @@
     </div>
     <div id="toast" class="toast hidden" role="status"></div>
     <section id="overlay" class="overlay"></section>
-    <div class="version">V1.0 • HTML5 OFFLINE</div>
+    <div class="version">V1.1 • HTML5 OFFLINE</div>
   </main>
-  <script src="game.js" defer></script>
+  <script src="game.js?v=1.1" defer></script>
 </body>
 </html>

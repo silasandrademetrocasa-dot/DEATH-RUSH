@@ -1,5 +1,5 @@
-const CACHE_NAME = 'deathrush-v1-20261103';
-const CORE = ['./', './index.html', './style.css', './game.js', './manifest.webmanifest','./assets/icon-192.png','./assets/icon-512.png'];
-self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(names=>Promise.all(names.filter(n=>n.startsWith('deathrush-')&&n!==CACHE_NAME).map(n=>caches.delete(n)))).then(()=>self.clients.claim()))});
-self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const req=event.request;event.respondWith(caches.match(req).then(match=>match||fetch(req).then(response=>{if(response.ok&&new URL(req.url).origin===self.location.origin){let copy=response.clone();caches.open(CACHE_NAME).then(cache=>cache.put(req,copy))}return response}).catch(()=>match||Response.error())))});
+const CACHE_NAME = 'deathrush-v1-1-20261103';
+const CORE = ['./', './index.html', './style.css?v=1.1', './game.js?v=1.1', './manifest.webmanifest','./assets/icon-192.png','./assets/icon-512.png'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(names=>Promise.all(names.filter(n=>n.startsWith('deathrush-')&&n!==CACHE_NAME).map(n=>caches.delete(n)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',event=>{const req=event.request;if(req.method!=='GET'||new URL(req.url).origin!==self.location.origin)return;const netFirst=req.mode==='navigate'||/\.(?:html|js|css)(?:\?|$)/.test(new URL(req.url).pathname);event.respondWith(netFirst?fetch(req).then(response=>{if(response.ok)caches.open(CACHE_NAME).then(c=>c.put(req,response.clone()));return response}).catch(()=>caches.match(req)):caches.match(req).then(cached=>cached||fetch(req).then(response=>{if(response.ok)caches.open(CACHE_NAME).then(c=>c.put(req,response.clone()));return response})))})
